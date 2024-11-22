@@ -38,9 +38,11 @@ export class Gameboard {
 
     #resetBoard(size) {
         for (let i = 0; i < size; ++i) {
+            const row = [];
             for (let j = 0; j < size; ++j) {
-                this.board[i][j] = new Cell();
+                row.push(new Cell());
             }
+            this.board.push(row);
         }
     }
 

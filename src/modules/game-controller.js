@@ -1,15 +1,24 @@
 import { Player } from "./player";
 
 export class GameController {
-    constructor(playerOneName, playerTwoName="computer") {
+    constructor(playerOneName='player', playerTwoName="computer") {
         this.playerOne = new Player(playerOneName);
         this.playerTwo = new Player(playerTwoName);
-        this.beingAttacked = this.playerTwo;
         this.activePlayer = this.playerOne;
+        this.beingAttacked = this.playerTwo;
+        
     }
 
     getActivePlayer() {
         return this.activePlayer;
+    }
+
+    getPlayerOne() {
+        return this.playerOne;
+    }
+
+    getPlayerTwo() {
+        return this.playerTwo;
     }
 
     #switchPlayer() {
