@@ -6,6 +6,7 @@ export class ScreenController {
         this.playersDiv = document.getElementById('playerDiv');
         this.compDiv = document.getElementById('compDiv');
         this.updateScreen();
+        this.resetBtnEvent();
     }
 
     updateScreen() {
@@ -14,6 +15,7 @@ export class ScreenController {
     }
 
     updateP1Board() {
+        this.playersDiv.textContent = "";
         this.game.getPlayerOne().getBoard().board.forEach((row, r_index) => {
             row.forEach((col, c_index) => {
                 const button = document.createElement('button');
@@ -32,6 +34,7 @@ export class ScreenController {
     }
 
     updateP2Board() {
+        this.compDiv.textContent = "";
         this.game.getPlayerTwo().getBoard().board.forEach((row, r_index) => {
             row.forEach((col, c_index) => {
                 const button = document.createElement('button');
@@ -84,5 +87,13 @@ export class ScreenController {
             btn.classList.add('used');
             btn.click();
         }
+    }
+
+    resetBtnEvent() {
+        const btn = document.getElementById('reset');
+        btn.addEventListener('click', () => {
+            this.game.getPlayerOne().getBoard().placeShipRandomly();
+            this.updateP1Board();
+        });
     }
 }

@@ -62,12 +62,12 @@ export class Gameboard {
     }
 
     gameover() {
-        // console.log(`${this.sunkedShips} : ${this.ships.length}`);
-        // console.log(this.sunkedShips == this.ships.length);
         return this.sunkedShips == this.ships.length;
     }
 
     placeShipRandomly() {
+        this.board = [];
+        this.#resetBoard(8);
         this.ships.forEach((ship) => {
             let x, y, dir;
             do {
