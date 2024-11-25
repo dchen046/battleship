@@ -10,12 +10,18 @@ export class GameController {
 
         this.playerOne.getBoard().placeShipRandomly();  
         this.playerTwo.getBoard().placeShipRandomly();
+    }
 
-        console.log(this.beingAttacked.getBoard().board);
+    gameover() {
+        return this.beingAttacked.getBoard().gameover();
     }
 
     getActivePlayer() {
         return this.activePlayer;
+    }
+
+    getBeingAttacked() {
+        return this.beingAttacked;
     }
 
     getPlayerOne() {
@@ -26,13 +32,14 @@ export class GameController {
         return this.playerTwo;
     }
 
-    #switchPlayer() {
+    switchPlayer() {
+        this.activePlayer = this.activePlayer === this.playerOne ? this.playerTwo : this.playerOne;
+
         this.beingAttacked = this.beingAttacked === this.playerTwo ? this.playerOne : this.playerTwo;
     }
 
     playRound(x, y) {
         const hit = this.beingAttacked.attack(x, y);
-        // this.#switchPlayer();
         return hit;
     }
 

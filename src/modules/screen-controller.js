@@ -2,21 +2,15 @@ import { GameController } from "./game-controller";
 
 export class ScreenController {
     constructor() {
-        this.game = new GameController("Hihi");
+        this.game = new GameController("Chungus");
         this.playersDiv = document.getElementById('playerDiv');
         this.compDiv = document.getElementById('compDiv');
-        this.turnDiv = document.getElementById('turnDiv');
         this.updateScreen();
     }
 
     updateScreen() {
-        this.updateTurn();
         this.updateP1Board();
         this.updateP2Board();
-    }
-
-    updateTurn() {
-        this.turnDiv.textContent = `${this.game.getActivePlayer().getName()} turn`;
     }
 
     updateP1Board() {
@@ -24,6 +18,11 @@ export class ScreenController {
             row.forEach((col, c_index) => {
                 const button = document.createElement('button');
                 button.classList.add('no-click');
+
+                if (col.hasShip()) {
+                    button.classList.add('btn', 'btn-warning');
+                }
+
                 button.dataset.row = r_index;
                 button.dataset.col = c_index;
                 this.addBtnEvent(button);
@@ -36,6 +35,9 @@ export class ScreenController {
         this.game.getPlayerTwo().getBoard().board.forEach((row, r_index) => {
             row.forEach((col, c_index) => {
                 const button = document.createElement('button');
+                if (col.hasShip()) {
+                    button.classList.add('btn', 'btn-warning');
+                }
                 button.dataset.row = r_index;
                 button.dataset.col = c_index;
                 this.addBtnEvent(button);
@@ -52,7 +54,35 @@ export class ScreenController {
                 const btnClasses = ['btn', 'btn-danger'];
                 button.classList.add(...btnClasses);
             }
+            this.checkWinner();
             console.log(`row: ${button.dataset.row} col: ${button.dataset.col}`);
         });
+    }
+
+    checkWinner() {
+        if (this.game.gameover()) {
+            let msg = `${this.game.getActivePlayer().name} has won!`;
+            document.getElementById('winner').textContent = msg;
+            let btns = this.compDiv.getElementsByTagName('button')
+            for (const btn of btns) {
+                btn.classList.add('no-click');
+            }
+        } else {
+            this.game.switchPlayer();
+            this.computerTurn();
+        }
+    }
+
+    computerTurn() {
+        if (this.game.getActivePlayer().name == 'computer') {
+            let btns = this.playersDiv.getElementsByTagName('button');
+            let btn;
+            do {
+                let index = Math.floor(Math.random() * btns.length);
+                btn = btns[index];
+            } while (btn.classList.contains('used'));
+            btn.classList.add('used');
+            btn.click();
+        }
     }
 }

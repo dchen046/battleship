@@ -62,6 +62,8 @@ export class Gameboard {
     }
 
     gameover() {
+        // console.log(`${this.sunkedShips} : ${this.ships.length}`);
+        // console.log(this.sunkedShips == this.ships.length);
         return this.sunkedShips == this.ships.length;
     }
 
@@ -72,7 +74,6 @@ export class Gameboard {
                 x = Math.floor(Math.random() * this.size);
                 y = Math.floor(Math.random() * this.size);
                 dir = Math.floor(Math.random() * 2) == 0 ? 'v' : 'h';
-                console.log(`${x}, ${y} : ${dir} : ${ship.length}`);
             } while (!this.placeShip([x, y], ship, dir));
         });
     }
@@ -109,8 +110,6 @@ export class Gameboard {
         }
         return true;
     }
-
-    // 1 2 v 2
 
     receiveAttack(row, col) {
         if (!this.board[row][col].alreadyHit) {
