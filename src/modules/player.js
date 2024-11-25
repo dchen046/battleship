@@ -1,7 +1,7 @@
 import { Gameboard } from "./board";
 
 export class Player {
-    constructor(name='computer') {
+    constructor(name = 'computer') {
         this.board = new Gameboard();
         this.name = name;
     }
@@ -15,6 +15,6 @@ export class Player {
     }
 
     attack(x, y) {
-        this.board.receiveAttack(x, y);
+        return this.board.receiveAttack(x, y);
     }
 }

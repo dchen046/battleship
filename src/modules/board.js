@@ -24,6 +24,10 @@ class Cell {
     setShip(ship) {
         this.ship = ship;
     }
+
+    hasShip() {
+        return this.ship !== null;
+    }
 }
 
 export class Gameboard {
@@ -63,59 +67,59 @@ export class Gameboard {
 
     placeShipRandomly() {
         this.ships.forEach((ship) => {
-            let x;
-            let y;
+            let x, y, dir;
             do {
-                x = Math.floor(Math.random() * this.board.size);
-                y = Math.floor(Math.random() * this.board.size);
-            } while (!this.board.placeShip([x,y], ship));
-        })
+                x = Math.floor(Math.random() * this.size);
+                y = Math.floor(Math.random() * this.size);
+                dir = Math.floor(Math.random() * 2) == 0 ? 'v' : 'h';
+                console.log(`${x}, ${y} : ${dir} : ${ship.length}`);
+            } while (!this.placeShip([x, y], ship, dir));
+        });
     }
 
-    placeShip(coords, ship, dir = 'v') {
+    placeShip(coords, ship, dir) {
+        if (!this.#isValidPlacement(coords, ship.length, dir)) return false;
+
         if (dir === 'v') {
-            if (this.#isValidPlacement(coords, ship.length, 'v')) {
-                for (let i = coords[0]; i < ship.length; ++i) {
-                    board[i][coords[1]].setShip(ship);
-                }
-                return true;
+            for (let i = coords[0]; i < coords[0] + ship.length; ++i) {
+                this.board[i][coords[1]].setShip(ship);
             }
+            return true;
         } else {
-            if (this.#isValidPlacement(coords, ship.length, 'h')) {
-                for (let i = coords[0]; i < ship.length; ++i) {
-                    board[coords[0]][i].setShip(ship);
-                }
-                this.ships.push(ship);
-                return true;
+            for (let i = coords[1]; i < coords[1] + ship.length; ++i) {
+                this.board[coords[0]][i].setShip(ship);
             }
+            return true;
         }
-        return false;
     }
 
-    #isValidPlacement(coords, shipLength, dir = 'v') {
-        if (coords[0] + shipLength >= this.size || coords[1] + shipLength >= this.size) return false;
-
-        if (dir == 'v') {
-            for (let i = coords[1]; i < coords[1] + shipLength; ++i) {
-                if (this.board[coords[0]][i].ship) {
-                    return false;
-                }
+    #isValidPlacement(coords, shipLength, dir) {
+        let row = coords[0];
+        let col = coords[1];
+        if (dir === 'v') {
+            if (row + shipLength >= this.size) return false;
+            for (let i = row; i < row + shipLength; ++i) {
+                if (this.board[i][col].hasShip()) return false;
             }
         } else {
-            for (let i = coords[0]; i < coords[0] + shipLength; ++i) {
-                if (this.board[i][coords[1]].ship) {
-                    return false;
-                }
+            if (col + shipLength >= this.size) return false;
+            for (let i = col; i < col + shipLength; ++i) {
+                if (this.board[row][i].hasShip()) return false;
             }
         }
         return true;
     }
 
-    receiveAttack(x, y) {
-        if (!this.board[x][y].alreadyHit) {
-            if (board[x][y].hit() && board[x][y].hasSunk()) {
-                ++this.sunkedShips;
+    // 1 2 v 2
+
+    receiveAttack(row, col) {
+        if (!this.board[row][col].alreadyHit) {
+            if (this.board[row][col].hit()) {
+                if (this.board[row][col].hasSunk()) ++this.sunkedShips;
+                return true;
             }
+
         }
+        return false;
     }
 }

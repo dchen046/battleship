@@ -1,12 +1,17 @@
 import { Player } from "./player";
 
 export class GameController {
-    constructor(playerOneName='player', playerTwoName="computer") {
+    constructor(playerOneName = 'player', playerTwoName = "computer") {
         this.playerOne = new Player(playerOneName);
         this.playerTwo = new Player(playerTwoName);
+
         this.activePlayer = this.playerOne;
         this.beingAttacked = this.playerTwo;
-        
+
+        this.playerOne.getBoard().placeShipRandomly();  
+        this.playerTwo.getBoard().placeShipRandomly();
+
+        console.log(this.beingAttacked.getBoard().board);
     }
 
     getActivePlayer() {
@@ -25,9 +30,10 @@ export class GameController {
         this.beingAttacked = this.beingAttacked === this.playerTwo ? this.playerOne : this.playerTwo;
     }
 
-    playRound(x,y) {
-        this.beingAttacked.checkAttack(x, y);
-        this.#switchPlayer();
+    playRound(x, y) {
+        const hit = this.beingAttacked.attack(x, y);
+        // this.#switchPlayer();
+        return hit;
     }
 
 }
